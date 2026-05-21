@@ -1,0 +1,31 @@
+@"
+# Environment files
+.env
+.env.*
+!.env.example
+
+backend/.env
+backend/.env.*
+!backend/.env.example
+
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+
+# Dependencies
+backend/vendor/
+frontend/node_modules/
+
+# Frontend build
+frontend/dist/
+
+# Laravel
+backend/storage/logs/*.log
+backend/bootstrap/cache/*.php
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+"@ | Set-Content -Encoding UTF8 .gitignore

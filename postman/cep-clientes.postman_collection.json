@@ -1,0 +1,53 @@
+{
+  "info": {
+    "name": "CEP Clientes API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Coleção para testar a API Laravel de consulta de CEP nos Correios e cadastro de clientes."
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health check",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/api/health"
+      }
+    },
+    {
+      "name": "Buscar CEP",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/api/ceps/01001001"
+      }
+    },
+    {
+      "name": "Criar cliente",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nome\": \"João Silva\",\n  \"email\": \"joao@example.com\",\n  \"cep\": \"01001-001\",\n  \"logradouro\": \"Praça da Sé\",\n  \"numero\": \"123\",\n  \"complemento\": \"Apto 10\",\n  \"bairro\": \"Sé\",\n  \"cidade\": \"São Paulo\",\n  \"uf\": \"SP\"\n}"
+        },
+        "url": "{{base_url}}/api/customers"
+      }
+    },
+    {
+      "name": "Listar clientes",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/api/customers"
+      }
+    }
+  ]
+}

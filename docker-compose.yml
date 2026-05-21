@@ -1,0 +1,65 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: cep_clientes_api
+    restart: unless-stopped
+    working_dir: /var/www/html
+    environment:
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: cep_clientes
+      DB_USERNAME: cep_user
+      DB_PASSWORD: cep_password
+    volumes:
+      - ./backend:/var/www/html
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - cep_clientes_network
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: cep_clientes_nginx
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    volumes:
+      - ./backend:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - api
+    networks:
+      - cep_clientes_network
+
+  mysql:
+    image: mysql:8.4
+    container_name: cep_clientes_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: cep_clientes
+      MYSQL_USER: cep_user
+      MYSQL_PASSWORD: cep_password
+      MYSQL_ROOT_PASSWORD: root_password
+    ports:
+      - "3307:3306"
+    volumes:
+      - cep_clientes_mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -proot_password --silent || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - cep_clientes_network
+
+volumes:
+  cep_clientes_mysql_data:
+
+networks:
+  cep_clientes_network:
+    driver: bridge
